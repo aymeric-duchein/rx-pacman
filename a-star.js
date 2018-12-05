@@ -20,7 +20,24 @@ function neighbors(grid, {row, column}) {
     return ret;
 }
 
-function init(matrix) {
+function getClosestFree(matrix, target) {
+    let grid = [];
+    for(let row = 0; row < 31; row++) {
+        grid[row] = [];
+        for(let column = 0; column < 28; column++) {
+            grid[row][column] = {
+                row,
+                column,
+                v: matrix[row][column],
+                d: manhattan({row, column}, target)
+            };
+        }
+    }
+    grid = grid.reduce((acc,r) => [...acc, ...r],[]).filter(n => n.v === 0).sort((n1,n2) => n1.d - n2.d);
+    return {row: grid[0].row, column: grid[0].column };
+}
+
+function init(matrix, start, dir) {
     let grid = [];
     for(let row = 0; row < 31; row++) {
         grid[row] = [];
@@ -39,6 +56,8 @@ function init(matrix) {
             };
         }
     }
+    grid[(start.row + Math.round(Math.cos(dir * Math.PI / 2 + Math.PI)) + 31) % 31][(start.column + Math.round(Math.sin(dir * Math.PI / 2 + Math.PI)) + 28) % 28].v = 1;
+
     return grid;
 }
 function heap() {
@@ -47,8 +66,11 @@ function heap() {
     });
 }
 
-function search(matrix, start, end) {
-    const grid = init(matrix);
+function search(matrix, start, end, dir) {
+    const grid = init(matrix, start, dir);
+    if (matrix[end.row][end.column] !== 0) {
+        end = getClosestFree(matrix, end);
+    }
     const heuristic = manhattan;
 
     const openHeap = heap();

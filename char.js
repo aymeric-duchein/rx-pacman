@@ -14,7 +14,7 @@ function Char(column, row, matrix, gridSize, r, g, b) {
 }
 
 Char.prototype = {
-    move: function(frameCount) {
+    move: function(frameCount, frameCycle) {
         if (!this.matrix[this.row + Math.round(Math.cos(this.dir * Math.PI / 2))][this.column + Math.round(Math.sin(this.dir * Math.PI / 2))] && frameCount === 0) {
             this.moving = true;
             this.posX += this.velocity * Math.sin(this.dir * Math.PI / 2);
@@ -24,16 +24,13 @@ Char.prototype = {
             this.posX += this.velocity * Math.sin(this.dir * Math.PI / 2);
             this.posY += this.velocity * Math.cos(this.dir * Math.PI / 2);
         }
-        if (frameCount === 3 && this.moving) {
+        if (frameCount === frameCycle - 1 && this.moving) {
             this.moving = false;
             this.column = (Math.floor(this.posX/this.gridSize) + 28) % 28;
             this.row = (Math.floor(this.posY/this.gridSize) + 31) % 31;
             this.posX = this.column * this.gridSize + this.gridSize / 2;
             this.posY = this.row * this.gridSize + this.gridSize / 2;
         }
-
-
-
     },
     draw: function() {
         fill(this.r,this.g,this.b);
@@ -42,5 +39,8 @@ Char.prototype = {
     },
     setDir: function(dir) {
         this.dir = dir;
+    },
+    setVelocity: function(velocity) {
+        this.velocity = velocity;
     }
 };
