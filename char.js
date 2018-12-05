@@ -35,12 +35,9 @@ Char.prototype = {
     draw: function() {
         fill(this.r,this.g,this.b);
         stroke(this.r,this.g,this.b);
-        rect(this.posX - 5, this.posY - 5, 10, 10);
+        rect(this.posX -  this.gridSize / 2, this.posY -  this.gridSize / 2,  this.gridSize - 1,  this.gridSize - 1, this.gridSize/2);
     },
     setDir: function(dir) {
         this.dir = dir;
-    },
-    setVelocity: function(velocity) {
-        this.velocity = velocity;
     }
 };
