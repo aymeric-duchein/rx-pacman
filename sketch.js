@@ -19,6 +19,22 @@ function draw() {
     background(0);
     drawMap(GRID_SIZE);
 
+    console.log(touches[0]);
+    if (touches[0]) {
+        if (touches[0].x >= touches[0].y) {
+            if (touches[0].x + touches[0].y < 59*GRID_SIZE / 2) {
+                inputDir = 2
+            } else {
+                inputDir = 1
+            }
+        } else {
+            if (touches[0].x + touches[0].y < 59*GRID_SIZE / 2) {
+                inputDir = 3
+            } else {
+                inputDir = 0
+            }
+        }
+    }
     if (!(frameCount % 4)) {
         pacMan.setDir(inputDir)
     }
