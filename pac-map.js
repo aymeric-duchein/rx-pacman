@@ -92,15 +92,51 @@ function drawMap(gridPixelSize) {
 
 function getOpenSpot() {
     let column = Math.floor(Math.random() * 27), row = Math.floor(Math.random() * 30);
-    while (MAP_MATRIX[row][column] !== 0) {
+    while (!isEmptySpace(MAP_MATRIX,row,column)) {
         column = Math.floor(Math.random() * 27);
         row = Math.floor(Math.random() * 30);
     }
     return {column,row}
 }
 
-function drawOpenSpot({row, column}, gridPixelSize, r = 200, g= 50, b = 50, diff = 5) {
-    fill(r,g,b);
-    stroke(r,g,b);
-    rect(column * gridPixelSize + diff, row * gridPixelSize + diff, gridPixelSize -  2 * diff, gridPixelSize - 2 * diff);
+function drawPellet({row, column}, gridPixelSize) {
+    fill(255,255,140);
+    stroke(255,255,140);
+    rect(column * gridPixelSize + gridPixelSize / 2 - 2, row * gridPixelSize + gridPixelSize / 2 - 2, 4, 4, 2);
+}
+
+function nextRow(row, dir, inc = 1) {
+    return (row + inc * Math.round(Math.cos(dir * Math.PI / 2)) + 31) % 31;
+}
+
+function nextCol(col, dir, inc = 1) {
+    return (col + inc * Math.round(Math.sin(dir * Math.PI / 2)) + 28) % 28;
+}
+
+function isEmptySpace(matrix, row, col) {
+    return !matrix[row][col];
+}
+
+function initPellets() {
+    const pellets = [];
+    let rowIndex = 0;
+    for(let row of MAP_MATRIX) {
+        let columnIndex = 0;
+        for(let value of row) {
+            if (value === 0) {
+                if (!((rowIndex === 14 && columnIndex !== 6 && columnIndex !== 21) || (rowIndex > 8 && rowIndex < 20 && columnIndex > 6 && columnIndex < 21) || (rowIndex === 23 && (columnIndex === 13 || columnIndex === 14)))) {
+                    pellets.push(
+                        {
+                            row: rowIndex,
+                            column: columnIndex,
+                        }
+                    )
+                }
+
+            }
+            columnIndex++;
+        }
+        rowIndex++;
+    }
+    return pellets;
 }

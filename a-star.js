@@ -56,8 +56,7 @@ function init(matrix, start, dir) {
             };
         }
     }
-    grid[(start.row + Math.round(Math.cos(dir * Math.PI / 2 + Math.PI)) + 31) % 31][(start.column + Math.round(Math.sin(dir * Math.PI / 2 + Math.PI)) + 28) % 28].v = 1;
-
+    grid[nextRow(start.row, (dir + 2) % 4)][nextCol(start.column, (dir + 2) % 4)].v = 1;
     return grid;
 }
 function heap() {
@@ -102,17 +101,14 @@ function search(matrix, start, end, dir) {
             const beenVisited = neighbor.visited;
 
             if(!beenVisited || gScore < neighbor.g) {
-
                 neighbor.visited = true;
                 neighbor.parent = currentNode;
                 neighbor.h = neighbor.h || heuristic(neighbor, grid[end.row][end.column]);
                 neighbor.g = gScore;
                 neighbor.f = neighbor.g + neighbor.h;
-
                 if (!beenVisited) {
                     openHeap.push(neighbor);
-                }
-                else {
+                } else {
                     openHeap.rescoreElement(neighbor);
                 }
             }
